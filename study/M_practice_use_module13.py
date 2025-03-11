@@ -18,7 +18,7 @@
 # mv.price_morinig(4)
 # mv.price_soldier(5)
 
-# from 모듈듈 - 함수만 호출 가능
+# from 모듈- 함수만 호출 가능
 from module import * # *아스타 대신 필요한 함수만 넣어 호출 가능
 # from radom import * 와 같다
 price(3)

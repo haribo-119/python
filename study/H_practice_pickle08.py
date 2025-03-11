@@ -4,7 +4,7 @@
 
 import pickle
 
-# #데이터 저장장
+# #데이터 저장
 # profile_file = open("profile.pickle","wb") 
 # # wb에서 w 쓰기, b는 바이너리를 의미 (pickle은 바이너리가 필요)
 

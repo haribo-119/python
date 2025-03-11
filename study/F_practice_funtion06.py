@@ -9,7 +9,7 @@
 
 
 # def dopsit(balance, money) :
-#     print("입금이 완료되었습니다. 작액은 {0}".format(balance+money))
+#     print("입금이 완료되었습니다. 잔액은 {0}".format(balance+money))
 #     return balance + money
 
 # balance = 0
