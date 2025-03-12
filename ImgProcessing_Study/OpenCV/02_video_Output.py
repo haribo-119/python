@@ -1,4 +1,4 @@
-# 동영상 파일 출력
+# # 동영상 파일 출력
 import cv2
 cap = cv2.VideoCapture(r'..\ImgProcessing_Study\OpenCV\video.mp4')
 
@@ -18,3 +18,22 @@ while cap.isOpened(): # 동영상 파일이 올바로 열려있는지 확인
    
 cap.release() # 자원 해제
 cv2.destroyAllWindows() # 모든 창 닫기
+
+# 카메라 출력
+import cv2
+cap = cv2.VideoCapture(0) # 0번째 카메라 장치 (Device ID)
+
+if not cap.isOpened(): # 카메라가 열리지 않은 경우
+    exit() #프로그램 종류
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    
+    cv2.imshow('camera',frame)
+    if cv2.waitKey(1) == ord('q')
+      break
+    
+cap.release()
+cv2.destroyAllWindows()
