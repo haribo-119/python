@@ -32,7 +32,7 @@ while True:
         break
     
     cv2.imshow('camera',frame)
-    if cv2.waitKey(1) == ord('q')
+    if cv2.waitKey(1) == ord('q') :
       break
     
 cap.release()
