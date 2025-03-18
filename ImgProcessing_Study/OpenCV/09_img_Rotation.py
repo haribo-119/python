@@ -1,7 +1,7 @@
 '''
     이미지 회전
 '''
-# 시계방향 90도 회전
+'''시계방향 90도 회전'''
 import cv2
 img = cv2.imread('..\ImgProcessing_Study\OpenCV\img.jpg')
 
@@ -12,7 +12,7 @@ cv2.imshow('img',rotate_90)
 cv2.waitKey(0)
 cv2.destroyAllWindows
 
-# 180도 회전
+'''180도 회전'''
 import cv2
 img = cv2.imread('..\ImgProcessing_Study\OpenCV\img.jpg')
 
@@ -23,7 +23,7 @@ cv2.imshow('img',rotate_180)
 cv2.waitKey(0)
 cv2.destroyAllWindows
 
-# 시계 반대 방향 90도 회전(시계방향 270도 회전)
+'''시계 반대 방향 90도 회전(시계방향 270도 회전)'''
 import cv2
 img = cv2.imread('..\ImgProcessing_Study\OpenCV\img.jpg')
 
