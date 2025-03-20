@@ -13,6 +13,8 @@ drawing = False # 선을 그릴지 여부
 
 def mouse_handler(event,x,y,flags,param) :
     global drawing
+    dst_img = src_img.copy()
+
     if event == cv2.EVENT_LBUTTONDOWN :
         drawing = True # 선을 그리기 시작
         point_list.append((x,y))
@@ -20,15 +22,20 @@ def mouse_handler(event,x,y,flags,param) :
     if  drawing :   
         prev_point = None # 직선의 시작점
         for point in point_list :
-            cv2.circle(src_img,point,10,COLOR,cv2.FILLED)
+            cv2.circle(dst_img,point,10,COLOR,cv2.FILLED)
             if prev_point:
-                cv2.line(src_img,prev_point,point,COLOR,THICKNESS,cv2.LINE_AA)
-            prev_point = point    
+                cv2.line(dst_img,prev_point,point,COLOR,THICKNESS,cv2.LINE_AA)
+            prev_point = point
 
-    if len(point_list) == 4:
-        show_result() # 결과 출력
+        next_point = (x,y)
+        if len(point_list) == 4:
+            show_result() # 결과 출력
+            next_point = point_list[0] # 첫번째 클릭한 지점
+            
+        cv2.line(dst_img,prev_point,next_point,COLOR,THICKNESS,cv2.LINE_AA)
+       
 
-    cv2.imshow('img',src_img)
+    cv2.imshow('img',dst_img)
 
 def show_result():
     # 가로 크기 640, 세로 크기 240으로 결과물 출력
