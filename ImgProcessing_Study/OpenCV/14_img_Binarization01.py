@@ -5,18 +5,18 @@
 # # Threthold(=임계값) : 주어진 시간에 따라 기준이 변경
 # # 3초면 가장 큰거거를 찾게됨, 10초면 큰거>중간 찾게됨
 # # 시간이 길어질 수록 찾게되는 범위가 커진다 
-# import cv2
-# img = cv2.imread('../ImgProcessing_Study/OpenCV/book.jpg',cv2.IMREAD_GRAYSCALE)
+import cv2
+img = cv2.imread('../ImgProcessing_Study/OpenCV/book.jpg',cv2.IMREAD_GRAYSCALE)
 
-# #threshold(이미지 파일,임계값,임계값보다 클때 적용할 색상,cv2.THRESH_BINARY)
-# ret, binary = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+#threshold(이미지 파일,임계값,임계값보다 클때 적용할 색상,cv2.THRESH_BINARY)
+ret, binary = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
 
-# cv2.imshow('img',img)
-# cv2.imshow('binary',binary)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+cv2.imshow('img',img)
+cv2.imshow('binary',binary)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
-# Trackbar(값 변화에 따른 변형 확인)
+''' Trackbar(값 변화에 따른 변형 확인) '''
 import cv2
 img = cv2.imread('../ImgProcessing_Study/OpenCV/book.jpg',cv2.IMREAD_GRAYSCALE)
 
