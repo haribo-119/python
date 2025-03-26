@@ -13,6 +13,8 @@ ret, otsu = cv2.threshold(gray,-1,255,cv2.THRESH_BINARY|cv2.THRESH_OTSU)
 # findContours 함수는 윤곽선 정보(contours), 구조 또는 계층(hierarchy)를 반환함
 # findContours(이미지,윤관석을 찾는 모드(mode),윤곽선을 찾을 때 근사치 방법(method))
 contours, hierarchy = cv2.findContours(otsu,cv2.RETR_LIST,cv2.CHAIN_APPROX_NONE)
+# CHAIN_APPROX_NONE - 모든 윤곽선을 찾음
+# CHAIN_APPROX_SIMPLE - 모서리만 찾아서 그려줌(메모리를 적게 사용)
 
 # drawContours 윤곽선 그리기
 # drawContours(사본이미지(원본을 손상),윤관선 정보,-1은 전부 그림,색상,두께)
