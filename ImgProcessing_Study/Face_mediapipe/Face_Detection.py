@@ -5,57 +5,45 @@
 '''
 import cv2
 import mediapipe as mp
-mp_face_detection = mp.solutions.face_detection
+
+''' 얼굴을 찾고, 찾은 얼굴에 표시를 해주기 위한 변수 정의 '''
+# 얼굴 검출을 위한 face_delection 모듈을 사용
+mp_face_detection = mp.solutions.face_detection 
+# 얼굴의 특징을 그리기 위한  drawing_utils 모듈을 사용
 mp_drawing = mp.solutions.drawing_utils
 
-# For static images:
-IMAGE_FILES = []
-with mp_face_detection.FaceDetection(
-    model_selection=1, min_detection_confidence=0.5) as face_detection:
-  for idx, file in enumerate(IMAGE_FILES):
-    image = cv2.imread(file)
-    # Convert the BGR image to RGB and process it with MediaPipe Face Detection.
-    results = face_detection.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-
-    # Draw face detections of each face.
-    if not results.detections:
-      continue
-    annotated_image = image.copy()
-    for detection in results.detections:
-      print('Nose tip:')
-      print(mp_face_detection.get_key_point(
-          detection, mp_face_detection.FaceKeyPoint.NOSE_TIP))
-      mp_drawing.draw_detection(annotated_image, detection)
-    cv2.imwrite('/tmp/annotated_image' + str(idx) + '.png', annotated_image)
-
-# For webcam input:
-cap = cv2.VideoCapture(0)
-with mp_face_detection.FaceDetection(
-    model_selection=0, min_detection_confidence=0.5) as face_detection:
+cap = cv2.VideoCapture('../ImgProcessing_Study/Face_mediapipe/face_video.mp4')
+with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence=0.7) as face_detection:
   while cap.isOpened():
     success, image = cap.read()
     if not success:
-      print("Ignoring empty camera frame.")
-      # If loading a video, use 'break' instead of 'continue'.
-      continue
+      break
 
     # To improve performance, optionally mark the image as not writeable to
     # pass by reference.
     image.flags.writeable = False
+    # cv2.COLOR_BGR2RGB : BGR에서 RGB로 색상을 변경
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # 이미지안의 얼굴을 검출
     results = face_detection.process(image)
 
     # Draw the face detection annotations on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    # 검출된 얼굴에 그리기
     if results.detections:
+      # 6개 특징 : 오른쪽 눈, 왼쪽 눈, 코 끝부분, 입 중심, 오른쪽 귀, 왼쪽 귀(귀구슬점, 이주)
       for detection in results.detections:
         mp_drawing.draw_detection(image, detection)
+        print(detection)
+
+
     # Flip the image horizontally for a selfie-view display.
-    cv2.imshow('MediaPipe Face Detection', cv2.flip(image, 1))
-    if cv2.waitKey(5) & 0xFF == 27:
+    # cv2.resize(image,None,fx=0.5,fy=0.5 화면 크기 줄이기
+    cv2.imshow('MediaPipe Face Detection', cv2.resize(image,None,fx=0.5,fy=0.5))
+    
+    if cv2.waitKey(4) == ord('q'):
       break
 cap.release()
-
-
-
+cv2.destroyAllWindows()
