@@ -6,6 +6,16 @@
 import cv2
 import mediapipe as mp
 
+# 대상이미지(3채널), x,y좌표 , width,heght, 덮어씌울 이미지(4채널)
+def overlay(image,x,y,w,h,overlay_image) : 
+  alpha = overlay_image[:,:,3] #BGRA - A(alpha)값만 가져옴
+  mask_image = alpha / 255 # 0~255 -> 255로 나누면 0 ~ 1 사이의 값
+  # mask_image 값의 1 : 불투명, 0:완전)
+
+  
+    
+
+
 ''' 얼굴을 찾고, 찾은 얼굴에 표시를 해주기 위한 변수 정의 '''
 # 얼굴 검출을 위한 face_delection 모듈을 사용
 mp_face_detection = mp.solutions.face_detection 
@@ -31,10 +41,12 @@ with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    '''이미지 불러오기'''
-    image_right_eye = cv2.imread(r'..\ImgProcessing_Study\Face_mediapipe\right_eye.png')
-    image_left_eye = cv2.imread('..\ImgProcessing_Study\Face_mediapipe\left_eye.png') 
-    image_nose_tip = cv2.imread('..\ImgProcessing_Study\Face_mediapipe\nose_tip.png')
+    '''이미지 불러오기'''# ..\ImgProcessing_Study\OpenCV\img.jpg
+    image_right_eye = cv2.imread('../ImgProcessing_Study/Face_mediapipe/face_right.png',cv2.IMREAD_UNCHANGED) #크기:100x100(가로,세로)
+    image_left_eye = cv2.imread('../ImgProcessing_Study/Face_mediapipe/face_left.png',cv2.IMREAD_UNCHANGED) #크기:100x100
+    image_nose_tip = cv2.imread('../ImgProcessing_Study/Face_mediapipe/face_nose.png',cv2.IMREAD_UNCHANGED) #크기:300x100
+
+    # cv2.imshow('img',image_right_eye)
 
     # 검출된 얼굴에 그리기
     if results.detections:
@@ -52,22 +64,27 @@ with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence
 
         #  _ 변수 사용안함
         h, w, _ = image.shape # height, width, channel : 이미지로부터 세로, 가로 크기 가져옴
-        right_eye = (int(right_eye.x * w),int(right_eye.y * h)) # 이미지 내에서 실제 좌표(x,y)
-        left_eye = (int(left_eye.x * w), int(left_eye.y * h))
+        right_eye = (int(right_eye.x * w)-20,int(right_eye.y * h)-100) # 이미지 내에서 실제 좌표(x,y)
+        left_eye = (int(left_eye.x * w)+ 20, int(left_eye.y * h)-100)
         nose_tip =(int(nose_tip.x * w),int(nose_tip.y * h))
         
         '''
           양 눈에 동그라미 그리기
         '''
+        
+        # blue = (255,0,0)
+        # pink = (203,192,255)
+        # yellow = (0,255,255)
+        # cv2.circle(image,right_eye,50,pink,10,cv2.LINE_AA)
+        # cv2.circle(image,left_eye,50,blue,10,cv2.LINE_AA)
+        # cv2.circle(image,nose_tip,30,yellow,10,cv2.LINE_AA)
+        
         '''
-        blue = (255,0,0)
-        pink = (203,192,255)
-        yellow = (0,255,255)
-        cv2.circle(image,right_eye,50,pink,10,cv2.LINE_AA)
-        cv2.circle(image,left_eye,50,blue,10,cv2.LINE_AA)
-        cv2.circle(image,nose_tip,30,yellow,10,cv2.LINE_AA)
+          각 특징에다가 이미지 그리기
         '''
-        cv2.ims
+        image[right_eye[1]-50 : right_eye[1] +50,right_eye[0]-50 : right_eye[0]+50] = image_right_eye
+        image[left_eye[1]-50 : left_eye[1] +50,left_eye[0]-50 : left_eye[0]+50] = image_left_eye
+        image[nose_tip[1]-50 : nose_tip[1] +50,nose_tip[0]-150 : nose_tip[0]+150] = image_nose_tip
 
 
     # Flip the image horizontally for a selfie-view display.
