@@ -8,9 +8,13 @@ import mediapipe as mp
 
 # 대상이미지(3채널), x,y좌표 , width,heght, 덮어씌울 이미지(4채널)
 def overlay(image,x,y,w,h,overlay_image) : 
-  alpha = overlay_image[:,:,3] #BGRA - A(alpha)값만 가져옴
+  alpha = overlay_image[:, :, 3] #BGRA - A(alpha)값만 가져옴
   mask_image = alpha / 255 # 0~255 -> 255로 나누면 0 ~ 1 사이의 값
   # mask_image 값의 1 : 불투명, 0:완전)
+
+  for c in range(0,3): #channel BGR
+    image[y-h:y+h,x-w:x+w,c] = (overlay_image[:,:,c] * mask_image) 
+    + (image[y-h:y+h,x-w:x+w,c] * (1-mask_image))
 
   
     
@@ -71,7 +75,6 @@ with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence
         '''
           양 눈에 동그라미 그리기
         '''
-        
         # blue = (255,0,0)
         # pink = (203,192,255)
         # yellow = (0,255,255)
@@ -82,9 +85,17 @@ with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence
         '''
           각 특징에다가 이미지 그리기
         '''
-        image[right_eye[1]-50 : right_eye[1] +50,right_eye[0]-50 : right_eye[0]+50] = image_right_eye
-        image[left_eye[1]-50 : left_eye[1] +50,left_eye[0]-50 : left_eye[0]+50] = image_left_eye
-        image[nose_tip[1]-50 : nose_tip[1] +50,nose_tip[0]-150 : nose_tip[0]+150] = image_nose_tip
+        # image[right_eye[1]-50 : right_eye[1] +50,right_eye[0]-50 : right_eye[0]+50] = image_right_eye
+        # image[left_eye[1]-50 : left_eye[1] +50,left_eye[0]-50 : left_eye[0]+50] = image_left_eye
+        # image[nose_tip[1]-50 : nose_tip[1] +50,nose_tip[0]-150 : nose_tip[0]+150] = image_nose_tip
+
+        '''
+          투명도 적용
+        '''
+        # image,x,y,w,h,overlay_image
+        overlay(image,*right_eye,50,50,image_right_eye)
+        overlay(image,*left_eye,50,50,image_left_eye)
+        overlay(image,*nose_tip,150,50,image_nose_tip)
 
 
     # Flip the image horizontally for a selfie-view display.
