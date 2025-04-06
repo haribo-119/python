@@ -2,8 +2,8 @@
     선형회귀
 '''
 # 공부 시간에 따른 시험 점수
-import matplotlib.pyplot as plt
-import pandas as pd
+import matplotlib.pyplot as plt # 그래프
+import pandas as pd # 데이터 조작 및 분석을 위한 강력한 라이브러리
 
 dataset = pd.read_csv('..\machine_Learning\scikitLearn\LinearRegressionData.csv')
 
@@ -14,7 +14,7 @@ X = dataset.iloc[:,:-1].values
 y = dataset.iloc[:,-1].values
 print(X,y)
 
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression # 머신러닝을 위한 Python 라이브러리
 reg = LinearRegression() # 객체 생성성
 
 # 조건 : X가 2차원 배열, y는 1차원 배열이여 한다
