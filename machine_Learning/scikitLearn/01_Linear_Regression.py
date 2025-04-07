@@ -36,6 +36,6 @@ plt.show()
 #Python에서 리스트를 중첩하여 배열의 차원을 정의
 print('9시간 공부했을 때 예상 점수 : ',reg.predict([[9]]))
 
-# y = mx + b : 선 그래프
+# y = mx + b : 선 그래프 (선형회귀 식)
 print('기울기 :', reg.coef_) # 기울기(m)
 print('y 절편 :', reg.intercept_) # y 절편 (b)

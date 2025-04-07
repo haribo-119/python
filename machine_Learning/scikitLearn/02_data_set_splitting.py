@@ -50,7 +50,7 @@ reg.fit(X_train, y_train) # 훈력 세트로 학습
 # plt.ylabel('score')
 # plt.show()
 
-print(reg.coef_) # 기울기
+print(reg.coef_) # 기울기 (m)
 print(reg.intercept_) # y 절편(b)
 
 '''모델 평가'''
