@@ -89,14 +89,38 @@ print(y_kmeans)
 centers = kmeans.cluster_centers_
 # print(centers)
 
+# for cluster in range(K) :
+#     plt.scatter(X1[y_kmeans == cluster,0], X1[y_kmeans == cluster,1], s =100, edgecolors='black')
+#     plt.scatter(centers[cluster,0], # X 좌표 0
+#                 centers[cluster,1], # y 좌표 1
+#                 s=300, 
+#                 edgecolors='black',color='yellow',marker='s')
+#     plt.text(centers[cluster,0], # X 좌표 0
+#              centers[cluster,1], # y 좌표 1)
+#              cluster,va='center',ha='center')
+# plt.title('Score by hours')
+# plt.xlabel('hours')
+# plt.ylabel('score')
+# plt.show()
+
+'''
+    데이터 시각화 (스케일링 원복)
+'''
+# Feature Scaling 된 데이터를 다시 원복
+X1_org = sc.inverse_transform(X1)
+# print(X_org[:5])
+
+centers_org = sc.inverse_transform(centers)
+# print(centers_org)
+
 for cluster in range(K) :
-    plt.scatter(X1[y_kmeans == cluster,0], X1[y_kmeans == cluster,1], s =100, edgecolors='black')
-    plt.scatter(centers[cluster,0], # X 좌표 0
-                centers[cluster,1], # y 좌표 1
+    plt.scatter(X1_org[y_kmeans == cluster,0], X1_org[y_kmeans == cluster,1], s =100, edgecolors='black')
+    plt.scatter(centers_org[cluster,0], # X 좌표 0
+                centers_org[cluster,1], # y 좌표 1
                 s=300, 
                 edgecolors='black',color='yellow',marker='s')
-    plt.text(centers[cluster,0], # X 좌표 0
-             centers[cluster,1], # y 좌표 1)
+    plt.text(centers_org[cluster,0], # X 좌표 0
+             centers_org[cluster,1], # y 좌표 1)
              cluster,va='center',ha='center')
 plt.title('Score by hours')
 plt.xlabel('hours')
