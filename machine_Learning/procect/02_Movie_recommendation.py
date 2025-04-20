@@ -53,18 +53,44 @@ q_movies['score'] = q_movies.apply(weghited_rating, axis = 1)
 q_movise = q_movies.sort_values('score', ascending=False)
 
 information = q_movies[['id','title','vote_count','score']].head(10)
-print(information)
+# print(information)
 
+''' 
+    2. Content Based Filtering (콘텐츠 기반 필터링) 
+        - 다양한 요소 기반 추천 (장르,감독,키워드 등)
 '''
-    데이터 시각화
-'''
-pop= df2.sort_values('popularity', ascending=False)
-import matplotlib.pyplot as plt
-plt.figure(figsize=(12,4))
+# print(df2.loc[0,'genres'])
+# 결과값 : [{"id": 28, "name": "Action"}, {"id": 12, "name": "Adventure"}, {"id": 14, "name": "Fantasy"}, {"id": 878, "name": "Science Fiction"}]
+# print(type(df2.loc[0,'genres'])) # 결과값 : <class 'str'>
 
-plt.barh(pop['title'].head(10),pop['popularity'].head(10), align='center',
-        color='skyblue')
-plt.gca().invert_yaxis()
-plt.xlabel("Popularity")
-plt.title("Popular Movies")
-plt.show()
+''' str -> list 변환 예시'''
+# s1 = [{"id":28,"name":"Action"}]
+# s2 = '[{"id":28,"name":"Action"}]'
+# print(type(s1),type(s2)) # 결과값 :<class 'list'> <class 'str'>
+
+# from ast import literal_eval
+# s2 = literal_eval(s2)
+# print(s2, type(s2)) # 결과값 : [{'id': 28, 'name': 'Action'}] <class 'list'>
+
+from ast import literal_eval
+
+features = ['cast','crew','keywords','genres']
+for feature in features :
+    df2[feature] = df2[feature].apply(literal_eval)
+
+# print(df2.loc[0,'crew'])
+
+# 감독 정보를 추출
+def get_director(x):
+    for i in x :
+        if i['job'] == 'Director':
+            return i['name']
+    return np.nan
+
+# df2['director'] 컬럼 생성
+df2['director'] = df2['crew'].apply(get_director)
+# print(df2['director'].head(10))
+
+# director칼럼에 null 값이 있는지 확인
+null_check = df2[df2['director'].isnull()]
+print(null_check)
