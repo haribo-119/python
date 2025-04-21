@@ -72,6 +72,10 @@ information = q_movies[['id','title','vote_count','score']].head(10)
 # s2 = literal_eval(s2)
 # print(s2, type(s2)) # 결과값 : [{'id': 28, 'name': 'Action'}] <class 'list'>
 
+'''
+    컨텐츠(배우,감독 등) 기반 필터링 #1
+'''
+
 from ast import literal_eval
 
 features = ['cast','crew','keywords','genres']
@@ -93,4 +97,93 @@ df2['director'] = df2['crew'].apply(get_director)
 
 # director칼럼에 null 값이 있는지 확인
 null_check = df2[df2['director'].isnull()]
-print(null_check)
+
+
+'''
+    컨텐츠(배우,감독 등) 기반 필터링 #2
+'''
+df2.loc[0,'cast']
+df2.loc[0,'genres']
+df2.loc[0,'keywords']
+
+# 처음 3개의 데이터 중에서 name에 해당하는 value만 추출
+def get_list(x):
+    if isinstance(x,list):
+        # x의 범위에서 i 데이터의 name 정보 key 값을 가져와 names에 저장
+        names = [i['name'] for i in x]
+        # 처음 3개의 데이터
+        if len(names) > 3 :
+            names = names[:3]
+        return names
+    return [] # 예상하지 못하는 값이 나올경우
+
+features = ['cast','keywords','genres']
+for feature in features :
+    df2[feature] = df2[feature].apply(get_list)
+
+dataset = df2[['title','cast','director','keywords','genres']].head(3)
+# print(dataset)
+
+# 띄어쓰기 없애기
+def clean_data(x) :
+        if isinstance(x,list):
+            return [str.lower(i.replace(' ',''))for i in x]
+        else :
+            if isinstance(x,str):
+                return str.lower(x.replace(' ',''))
+            else :
+                return ''
+
+features = ['cast','keywords','director','genres']
+for feature in features :
+    df2[feature] = df2[feature].apply(clean_data)
+
+dataset = df2[['title','cast','director','keywords','genres']].head(3)
+# print(dataset)
+
+# 칼럼 합치기
+def create_soup(x):
+    return ' '.join(x['keywords']) + ' ' + ' '.join(x['cast']) + ' ' + x['director'] + ' ' + ' '.join(x['genres'])
+df2['soup'] = df2.apply(create_soup, axis=1)
+# print(df2['soup'])
+
+'''
+    컨텐츠(배우,감독 등) 기반 필터링 #3
+'''
+
+from sklearn.feature_extraction.text import CountVectorizer
+count = CountVectorizer(stop_words='english')
+count_matrix = count.fit_transform(df2['soup'])
+# print(count_matrix)
+
+from sklearn.metrics.pairwise import cosine_similarity
+cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
+# print(cosine_sim2) # 유사도
+
+df2 = df2.reset_index()
+indices = pd.Series(df2.index,index=df2['title'])
+# print(indices)
+
+
+'''영화의 제목을 입력받으면 가장 코사인 유사도가 높은 영화 리스트를 출력'''
+def get_recommendations(title,cosine_sim=cosine_sim2) :
+    # 1) 영화 제목을 통해서 전체 데이터 기준 그 영화의 index 값을 얻기
+    idx = indices[title]
+    # 2) 코사인 유사도 매트릭스 (consine_sim)에서 idx 에 해당하는 데이터를 (idx,유사도) 형태로 얻기
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    # 3) 코사인 유사도 기준으로 내림차순 정렬
+    sim_scores = sorted(sim_scores, key=lambda x : x[1], reverse=True)
+    # 자기 자신을 제외한 10개의 추천 영화를 슬라이싱
+    sim_scores = sim_scores[1:11]
+    # 4) 추천 영화 목록 10개의 인덱스 정보 추출
+    movie_indices = [i[0] for i in sim_scores]
+    # 5) 인덱스 정보를 통해 영화 제목 추출
+    return df2['title'].iloc[movie_indices]
+
+result = get_recommendations('The Dark Knight Rises', cosine_sim2)
+print(result)
+
+# 마션 영화 데이터 추출
+indices['The Martian']
+review = df2.loc[270]
+print(review)
