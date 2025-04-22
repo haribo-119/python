@@ -186,4 +186,17 @@ print(result)
 # 마션 영화 데이터 추출
 indices['The Martian']
 review = df2.loc[270]
-print(review)
+# print(review)
+
+'''
+    영화 추천 웹사이트 #1
+'''
+# app.py에 사용할 데이터 덤프
+import pickle
+# print(df2.head(2))
+
+movies = df2[['id','title']].copy()
+print(movies.head(5))
+
+# pickle.dump(movies,open('movies.pickle','wb'))
+# pickle.dump(cosine_sim2,open('cosine_sim.pickle','wb'))
